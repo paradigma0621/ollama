@@ -1,5 +1,6 @@
 package com.paradigma0621.ollama.service;
 
+import com.paradigma0621.ollama.dto.CountryCuisines;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.InMemoryChatMemory;
@@ -48,6 +49,26 @@ public class OllamaService {
 		return chatClient.prompt(prompt).call().chatResponse().getResult().getOutput().getText();
 	}
 
-	
+	public CountryCuisines getCuisines(String country, String numCuisines, String language) {
+
+		String promptModel = """
+		You are an expert in traditional cuisines.
+		Answer the question: What is the traditional cuisine of {country}?
+		Return a list of {numCuisines} in {language}.
+		You provide information about a specific dish
+		from a specific country.
+		Avoid giving information about fictional places.
+		If the country is fictional or non-existent
+		return the country with out any cuisines.
+		""";
+
+		PromptTemplate promptTemplate = new PromptTemplate(promptModel);
+
+		Prompt prompt = promptTemplate
+				.create(Map.of("country", country, "numCuisines", numCuisines, "language", language));
+
+		return chatClient.prompt(prompt).call().entity(CountryCuisines.class); // Return the entity CountryCuisines, in
+														// wictch field is a Collection
+	}
 
 }
