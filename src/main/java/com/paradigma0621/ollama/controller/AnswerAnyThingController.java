@@ -23,4 +23,14 @@ public class AnswerAnyThingController {
         logger.info("Response: \n" + response.getResult().getOutput().getText());
         return response.getResult().getOutput().getText();
     }
+
+    @GetMapping("/getTravelGuidance")
+    public String askAnything(@RequestParam String city,
+                              @RequestParam String month,
+                              @RequestParam String language,
+                              @RequestParam String budget) {
+        String response = service.getTravelGuidance(city, month, language, budget);
+        return response;
+    }
+
 }
