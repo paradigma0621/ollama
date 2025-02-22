@@ -7,16 +7,23 @@ import org.springframework.ai.chat.memory.InMemoryChatMemory;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.ai.embedding.EmbeddingModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 
+import static java.util.Objects.nonNull;
+
 @Service
 public class OllamaService {
 	
 	private ChatClient chatClient;
-	
+
+	@Autowired
+	private EmbeddingModel embeddingModel;
+
 	public OllamaService(ChatClient.Builder builder) {
 		chatClient = builder.defaultAdvisors(new MessageChatMemoryAdvisor
 				(new InMemoryChatMemory())).build();	// Add memory to the chat client
@@ -30,7 +37,7 @@ public class OllamaService {
 									@RequestParam String month,
 									@RequestParam String language,
 									@RequestParam String budget) {
-		String promptPattern =
+		var promptPattern =
 				"""
 				Welcome to the {city} travel guide!
 				If you're visiting in {month}, here's what you can do: 
@@ -46,7 +53,8 @@ public class OllamaService {
 		Prompt prompt = promptTemplate
 				.create(Map.of("city", city, "month", month, "language", language, "budget", budget));
 
-		return chatClient.prompt(prompt).call().chatResponse().getResult().getOutput().getText();
+		var response = chatClient.prompt(prompt).call().chatResponse();
+		return nonNull(response) ? response.getResult().getOutput().getText() : "No response";
 	}
 
 	public CountryCuisines getCuisines(String country, String numCuisines, String language) {

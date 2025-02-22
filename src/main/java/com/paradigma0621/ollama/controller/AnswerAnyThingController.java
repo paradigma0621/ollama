@@ -4,7 +4,6 @@ import com.paradigma0621.ollama.dto.CountryCuisines;
 import com.paradigma0621.ollama.service.OllamaService;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.logging.Logger;
@@ -31,16 +30,15 @@ public class AnswerAnyThingController {
                               @RequestParam String month,
                               @RequestParam String language,
                               @RequestParam String budget) {
-        String response = service.getTravelGuidance(city, month, language, budget);
-        return response;
+        return service.getTravelGuidance(city, month, language, budget);
     }
 
     @GetMapping("/cuisineHelper")
     public CountryCuisines getChatResponse(@RequestParam("country") String country,
                                   @RequestParam("numCuisines") String numCuisines,
                                   @RequestParam("language") String language) {
-        CountryCuisines countryCuisines = service.getCuisines(country,numCuisines,language);
-        return countryCuisines;
+        return service.getCuisines(country,numCuisines,language);
     }
+
 
 }
