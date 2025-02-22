@@ -19,4 +19,10 @@ public class EmbeddingController {
 		float[] response = service.embed(text);
 		return Arrays.toString(response);
 	}
+
+	@GetMapping("/similarityFinder")
+	public double findSimilarity(@RequestParam String text1, @RequestParam String text2) { // 'text1' and 'text2' can be
+																			// any string (a single word or a sentence)
+		return service.findSimilarity(text1, text2);
+	}
 }
