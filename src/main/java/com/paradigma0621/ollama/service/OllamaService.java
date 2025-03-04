@@ -20,6 +20,4 @@ public class OllamaService {
 		return chatClient.prompt(question).call().chatResponse();
 	}
 
-	
-
 }
